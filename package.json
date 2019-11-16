@@ -1,0 +1,41 @@
+{
+  "name": "xyaml-webpack-loader",
+  "version": "0.0.1",
+  "scripts": {
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "js-yaml": "^3.13.1",
+    "markdown-it": "^10.0.0",
+    "markdown-it-named-headings": "^1.1.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.0.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "loader-utils": "^1.2.3"
+  },
+  "peerDependencies": {
+    "loader-utils": "^1.2.3"
+  },
+  "engines": {
+    "node": "^8.0.0 || ^9.0.0 || ^10.0.0 || ^12.0.0",
+    "npm": "^6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stalniy/xyaml-webpack-loader.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}
