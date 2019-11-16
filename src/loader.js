@@ -11,7 +11,7 @@ module.exports = function yaml2json(source) {
     this.cacheable();
   }
 
-  const options = getOptions(this);
+  const options = getOptions(this) || {};
   const load = options.safe !== false ? 'safeLoad' : 'load';
 
   try {
