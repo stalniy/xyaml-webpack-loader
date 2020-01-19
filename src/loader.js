@@ -1,21 +1,22 @@
 const yaml = require('js-yaml');
 const { getOptions } = require('loader-utils');
-const MarkdownType = require('./types/MarkdownType');
+const memoize = require('lodash/memoize');
+const createMarkdownType = require('./types/MarkdownType');
 
-const MARKDOWN_SCHEMA = yaml.Schema.create(yaml.DEFAULT_SAFE_SCHEMA, [
-  MarkdownType,
-]);
+const createYamlSchema = memoize((options = {}) => yaml.Schema.create(yaml.DEFAULT_SAFE_SCHEMA, [
+  createMarkdownType(options.markdown),
+]));
 
 module.exports = function yaml2json(source) {
   if (this.cacheable) {
     this.cacheable();
   }
 
-  const options = getOptions(this) || {};
-  const load = options.safe !== false ? 'safeLoad' : 'load';
+  const { safe, ...options } = getOptions(this) || {};
+  const load = safe !== false ? 'safeLoad' : 'load';
 
   try {
-    const result = yaml[load](source, { schema: MARKDOWN_SCHEMA });
+    const result = yaml[load](source, { schema: createYamlSchema(options) });
     return JSON.stringify(result, null, '\t');
   } catch (err) {
     this.emitError(err);

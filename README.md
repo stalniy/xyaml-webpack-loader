@@ -15,14 +15,27 @@ yarn add -D xyaml-webpack-loader
 
 ```js
 // webpack.config.js
-module: {
-  rules: [{
-    type: 'json',
-    test: /\.yaml$/,
-    use: 'xyaml-webpack-loader',
-  }]
+module.exports = {
+  // ...
+  module: {
+    rules: [{
+      type: 'json',
+      test: /\.yaml$/,
+      use: 'xyaml-webpack-loader',
+      options: { // default configuration
+        markdown: {
+          use: [
+            'markdown-it-named-headings',
+            ['markdown-it-attrs', { leftDelimiter: '@{' }]
+          ]
+        }
+      }
+    }]
+  }
 }
 ```
+
+You can configure `markdown-it` parser to use any modules, by specifying them in `use` option.
 
 ## Example YAML
 
