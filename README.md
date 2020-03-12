@@ -27,7 +27,7 @@ module.exports = {
       options: { // default configuration
         markdown: {
           use: {
-            'markdown-it-named-headings': {} // you can specify `false` to disable plugin
+            'markdown-it-headinganchor': {} // you can specify `false` to disable plugin
             'markdown-it-attrs': { leftDelimiter: '@{' }
           }
         }
@@ -51,7 +51,7 @@ export {
     yaml({
       markdown: { // default configuration, no need to provide
         use: {
-          'markdown-it-named-headings': {} // you can specify `false` to disable plugin
+          'markdown-it-headinganchor': {} // you can specify `false` to disable plugin
           'markdown-it-attrs': { leftDelimiter: '@{' }
         }
       }
