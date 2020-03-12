@@ -3,20 +3,12 @@ const { parse } = require('./yaml');
 
 const isYaml = id => id.endsWith('.yaml') || id.endsWith('.yml');
 
-function yaml({ include,
-  exclude,
-  indent,
-  preferConst,
-  compact,
-  namedExports,
-  asModule,
-  ...options }) {
-  const filter = createFilter(include, exclude);
+module.exports = function yaml(options = {}) {
+  const filter = createFilter(options.include, options.exclude);
+  const esm = !options.esm || options.esm === true ? null : options.esm;
   const esmOptions = {
-    preferConst,
-    compact,
-    namedExports,
-    indent: indent || '\t'
+    indent: '\t',
+    ...esm
   };
 
   return {
@@ -27,7 +19,7 @@ function yaml({ include,
       }
 
       const content = parse(source, options);
-      const code = asModule ? dataToEsm(content, esmOptions) : JSON.stringify(content);
+      const code = options.esm ? dataToEsm(content, esmOptions) : JSON.stringify(content);
 
       return {
         code,
@@ -35,6 +27,4 @@ function yaml({ include,
       };
     }
   };
-}
-
-module.exports = yaml;
+};
