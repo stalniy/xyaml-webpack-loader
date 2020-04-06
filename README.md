@@ -101,3 +101,37 @@ const fs = require('fs');
 
 const content = parse(fs.readFileSync('about-us.page.yml'));
 ```
+
+## Advanced Markdown configuration
+
+Some `markdown-it` plugins accept more than single options argument (e.g., [markdown-it-container](https://github.com/markdown-it/markdown-it-container)). In such cases, we can specify an array of options:
+
+```js
+const options = {
+  markdown: { // default configuration, no need to provide
+    use: {
+      'markdown-it-container': ['image', {
+        // other options here
+      }]
+    }
+  }
+};
+```
+
+Or if we need to call the same plugin multiple times, we can use a function:
+
+```js
+const options = {
+  markdown: { // default configuration, no need to provide
+    use(parser, applyPlugins) {
+      applyPlugins(parser); // apply default plugins
+      parser.use('markdown-it-container', 'image', {
+        // other options here
+      });
+      parser.use('markdown-it-container', 'spoiler', {
+        // other options here
+      });
+    }
+  }
+};
+```

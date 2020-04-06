@@ -1,21 +1,40 @@
 const Markdown = require('markdown-it');
 
-module.exports = function createMdParser(options = {}) {
-  const parser = new Markdown({ html: true });
-  const extensions = {
-    'markdown-it-headinganchor': {},
-    'markdown-it-attrs': { leftDelimiter: '@{' },
-    ...options.use,
-  };
+const DEFAULT_PLUGINS = {
+  'markdown-it-headinganchor': {},
+  'markdown-it-attrs': { leftDelimiter: '@{' },
+};
 
-  Object.keys(extensions).forEach((extName) => {
-    const extOptions = extensions[extName];
+function applyPlugins(md, plugins) {
+  const allPlugins = { ...DEFAULT_PLUGINS, ...plugins };
 
-    if (extOptions !== false) {
-      const extension = require(extName); // eslint-disable-line
-      parser.use(extension, extOptions);
+  Object.keys(allPlugins).forEach((name) => {
+    const options = allPlugins[name];
+
+    if (options === false) {
+      return;
+    }
+
+    const plugin = require(name); // eslint-disable-line
+
+    if (options === true) {
+      md.use(plugin);
+    } else if (Array.isArray(options)) {
+      md.use(plugin, ...options);
+    } else {
+      md.use(plugin, options);
     }
   });
+}
+
+module.exports = function createMdParser(options = {}) {
+  const parser = new Markdown({ html: true });
+
+  if (typeof options.use === 'function') {
+    options.use(parser, applyPlugins);
+  } else {
+    applyPlugins(parser, options.use);
+  }
 
   return parser;
 };
