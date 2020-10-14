@@ -8,7 +8,8 @@ const createYamlSchema = memoize((options = {}) => {
   const types = [];
 
   if (options.markdown !== false) {
-    const parser = options.markdown.parser || getOrCreateMdParser(options.markdown);
+    const md = options.markdown || {};
+    const parser = md.parser || getOrCreateMdParser(md);
     types.push(createMarkdownType(parser));
   }
 
