@@ -4,13 +4,21 @@ const createMarkdownType = require('./types/MarkdownType');
 const createMdParser = require('./services/markdown');
 
 const getOrCreateMdParser = memoize(createMdParser);
-const createYamlSchema = memoize((options = {}) => yaml.Schema.create(yaml.DEFAULT_SAFE_SCHEMA, [
-  createMarkdownType(getOrCreateMdParser(options.markdown)),
-]));
+const createYamlSchema = memoize((options = {}) => {
+  const types = [];
+
+  if (options.markdown !== false) {
+    const parser = options.markdown.parser || getOrCreateMdParser(options.markdown);
+    types.push(createMarkdownType(parser));
+  }
+
+  return yaml.Schema.create(yaml.DEFAULT_SAFE_SCHEMA, types);
+});
 
 function parse(source, { safe, ...options } = {}) {
-  const load = safe !== false ? 'safeLoad' : 'load';
-  return yaml[load](source, { schema: createYamlSchema(options) });
+  const load = safe !== false ? yaml.safeLoad : yaml.load;
+
+  return load(source, { schema: createYamlSchema(options) });
 }
 
 module.exports = {
