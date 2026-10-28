@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.8.0](https://github.com/stalniy/xyaml-webpack-loader/compare/v0.7.2...v0.8.0) (2026-10-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* removes default plugins and changes how plugins are passed to loader
+* migrates to ESM
+
+### Code Refactoring
+
+* migrates to ESM ([d12a176](https://github.com/stalniy/xyaml-webpack-loader/commit/d12a176dc5ac0c4852c2ef42067ffb11fedafabe))
+* removes default plugins and changes how plugins are passed to loader ([f530868](https://github.com/stalniy/xyaml-webpack-loader/commit/f530868b11957f435e32ac2f2a4bc6eb786c67f5))
+
 ## [0.7.2](https://github.com/stalniy/xyaml-webpack-loader/compare/v0.7.1...v0.7.2) (2026-08-08)
 
 
