@@ -1,30 +1,44 @@
 {
   "name": "xyaml-webpack-loader",
-  "version": "0.7.1",
+  "version": "0.8.0",
+  "type": "module",
   "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./parser": "./src/yaml.js",
+    "./parser.js": "./src/yaml.js",
+    "./rollup": "./src/rollup.js",
+    "./rollup.js": "./src/rollup.js",
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "lint": "eslint src/"
+    "test": "node --test",
+    "lint": "eslint src/ test/",
+    "release": "npm publish"
   },
   "dependencies": {
-    "js-yaml": "^3.13.1",
-    "lodash": "^4.17.15",
-    "markdown-it": "^10.0.0",
-    "markdown-it-attrs": "^3.0.1",
-    "markdown-it-headinganchor": "^1.3.0"
+    "@rollup/pluginutils": "^4.2.1",
+    "js-yaml": "^5.5.0",
+    "loader-utils": "^1.2.3",
+    "markdown-it": "^15.0.3"
   },
   "devDependencies": {
-    "@rollup/pluginutils": "^3.0.8",
     "babel-eslint": "^10.0.3",
-    "eslint": "^6.0.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.9.0",
     "husky": "^3.1.0",
     "lint-staged": "^9.5.0",
-    "loader-utils": "^1.2.3"
+    "markdown-it-attrs": "^4.5.0"
   },
   "engines": {
-    "node": "^8.0.0 || ^9.0.0 || ^10.0.0 || ^12.0.0",
-    "npm": "^6.0.0"
+    "node": "^22.0.0 || ^24.0.0",
+    "npm": "^11.0.0"
+  },
+  "packageManager": "npm@11.11.0",
+  "volta": {
+    "node": "24.21.0",
+    "npm": "11.11.0"
   },
   "repository": {
     "type": "git",

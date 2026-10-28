@@ -1,7 +1,9 @@
-const { getOptions } = require('loader-utils'); // eslint-disable-line
-const { parse } = require('./yaml');
+import loaderUtils from 'loader-utils';
+import { parse } from './yaml.js';
 
-module.exports = function yaml2json(source) {
+const { getOptions } = loaderUtils;
+
+export function yaml2json(source) {
   if (this.cacheable) {
     this.cacheable();
   }
@@ -15,4 +17,4 @@ module.exports = function yaml2json(source) {
     this.emitError(err);
     return null;
   }
-};
+}

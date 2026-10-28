@@ -1,21 +1,10 @@
-const Markdown = require('markdown-it');
+import Markdown from 'markdown-it';
 
-const DEFAULT_PLUGINS = {
-  'markdown-it-headinganchor': {},
-  'markdown-it-attrs': { leftDelimiter: '@{' },
-};
-
-function applyPlugins(md, plugins) {
-  const allPlugins = { ...DEFAULT_PLUGINS, ...plugins };
-
-  Object.keys(allPlugins).forEach((name) => {
-    const options = allPlugins[name];
-
+function applyPlugins(md, plugins = []) {
+  plugins.forEach(([plugin, options]) => {
     if (options === false) {
       return;
     }
-
-    const plugin = require(name); // eslint-disable-line
 
     if (options === true) {
       md.use(plugin);
@@ -27,7 +16,7 @@ function applyPlugins(md, plugins) {
   });
 }
 
-module.exports = function createMdParser(options = {}) {
+export default function createMdParser(options = {}) {
   const parser = new Markdown({ html: true });
 
   if (typeof options.use === 'function') {
@@ -37,4 +26,4 @@ module.exports = function createMdParser(options = {}) {
   }
 
   return parser;
-};
+}
