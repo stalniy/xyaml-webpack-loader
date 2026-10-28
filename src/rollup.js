@@ -1,9 +1,9 @@
-const { createFilter, dataToEsm } = require('@rollup/pluginutils'); // eslint-disable-line
-const { parse } = require('./yaml');
+import { createFilter, dataToEsm } from '@rollup/pluginutils';
+import { parse } from './yaml.js';
 
 const isYaml = id => id.endsWith('.yaml') || id.endsWith('.yml');
 
-module.exports = function yaml(options = {}) {
+export function yaml(options = {}) {
   const filter = createFilter(options.include, options.exclude);
   const esm = !options.esm || options.esm === true ? null : options.esm;
   const esmOptions = {
@@ -27,4 +27,4 @@ module.exports = function yaml(options = {}) {
       };
     }
   };
-};
+}

@@ -1,7 +1,7 @@
-const yaml = require('js-yaml');
-const memoize = require('lodash/memoize');
-const createMarkdownType = require('./types/MarkdownType');
-const createMdParser = require('./services/markdown');
+import yaml from 'js-yaml';
+import createMarkdownType from './types/MarkdownType.js';
+import createMdParser from './services/markdown.js';
+import memoize from './services/memoize.js';
 
 const getOrCreateMdParser = memoize(createMdParser);
 const createYamlSchema = memoize((options = {}) => {
@@ -22,7 +22,7 @@ function parse(source, { safe, ...options } = {}) {
   return load(source, { schema: createYamlSchema(options) });
 }
 
-module.exports = {
+export {
   createYamlSchema,
   createMarkdownType,
   getOrCreateMdParser,

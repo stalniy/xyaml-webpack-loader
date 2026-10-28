@@ -2,6 +2,7 @@
   "extends": "airbnb-base",
   "parser": "babel-eslint",
   "rules": {
+    "import/extensions": ["error", "ignorePackages"],
     "import/prefer-default-export": "off",
     "no-plusplus": "off",
     "comma-dangle": "off",

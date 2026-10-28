@@ -1,4 +1,8 @@
-const Markdown = require('markdown-it');
+import { createRequire } from 'node:module';
+import Markdown from 'markdown-it';
+
+// Plugins are resolved synchronously to preserve the parser's synchronous API.
+const require = createRequire(import.meta.url);
 
 const DEFAULT_PLUGINS = {
   'markdown-it-headinganchor': {},
@@ -27,7 +31,7 @@ function applyPlugins(md, plugins) {
   });
 }
 
-module.exports = function createMdParser(options = {}) {
+export default function createMdParser(options = {}) {
   const parser = new Markdown({ html: true });
 
   if (typeof options.use === 'function') {
@@ -37,4 +41,4 @@ module.exports = function createMdParser(options = {}) {
   }
 
   return parser;
-};
+}

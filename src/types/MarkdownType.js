@@ -1,10 +1,10 @@
-const yaml = require('js-yaml');
+import yaml from 'js-yaml';
 
 function isSingleParagraph(html) {
   return html.startsWith('<p>') && html.endsWith('</p>') && html.indexOf('<p>', 3) === -1;
 }
 
-module.exports = function createYamlType(parser) {
+export default function createYamlType(parser) {
   return new yaml.Type('!md', {
     kind: 'scalar',
     construct(value) {
@@ -12,4 +12,4 @@ module.exports = function createYamlType(parser) {
       return isSingleParagraph(parsed) ? parsed.slice(3, -4) : parsed;
     },
   });
-};
+}

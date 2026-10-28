@@ -13,11 +13,18 @@ npm i -D xyaml-webpack-loader
 yarn add -D xyaml-webpack-loader
 ```
 
+This package is ESM only. Use `import` in JavaScript and ESM configuration files
+(`.mjs`, or `.js` with `"type": "module"` in your `package.json`).
+
+Public entry points are `xyaml-webpack-loader` (Webpack loader),
+`xyaml-webpack-loader/rollup` (default plugin export), and
+`xyaml-webpack-loader/parser` (named parser exports).
+
 ## Configure Webpack
 
 ```js
 // webpack.config.js
-module.exports = {
+export default {
   // ...
   module: {
     rules: [{
@@ -27,7 +34,7 @@ module.exports = {
       options: { // default configuration
         markdown: {
           use: {
-            'markdown-it-headinganchor': {} // you can specify `false` to disable plugin
+            'markdown-it-headinganchor': {}, // you can specify `false` to disable plugin
             'markdown-it-attrs': { leftDelimiter: '@{' }
           }
         }
@@ -45,13 +52,13 @@ You can configure `markdown-it` parser to use any modules, by specifying them in
 // rollup.config.js
 import yaml from 'xyaml-webpack-loader/rollup';
 
-export {
+export default {
   // ...
   plugins: [
     yaml({
       markdown: { // default configuration, no need to provide
         use: {
-          'markdown-it-headinganchor': {} // you can specify `false` to disable plugin
+          'markdown-it-headinganchor': {}, // you can specify `false` to disable plugin
           'markdown-it-attrs': { leftDelimiter: '@{' }
         }
       }
@@ -96,8 +103,8 @@ console.log(aboutUs.content) // rendered HTML string
 You can also use parser programatically:
 
 ```js
-const { parse } = require('xyaml-webpack-loader/parser');
-const fs = require('fs');
+import { parse } from 'xyaml-webpack-loader/parser';
+import fs from 'node:fs';
 
 const content = parse(fs.readFileSync('about-us.page.yml'));
 ```

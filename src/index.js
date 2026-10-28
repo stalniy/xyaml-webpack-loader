@@ -1,1 +1,1 @@
-module.exports = require('./webpack');
+export { yaml2json } from './webpack.js';
