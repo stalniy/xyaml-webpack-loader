@@ -1,4 +1,4 @@
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import createMarkdownType from './types/MarkdownType.js';
 import createMdParser from './services/markdown.js';
 import memoize from './services/memoize.js';
@@ -13,13 +13,11 @@ const createYamlSchema = memoize((options = {}) => {
     types.push(createMarkdownType(parser));
   }
 
-  return yaml.Schema.create(yaml.DEFAULT_SAFE_SCHEMA, types);
+  return yaml.CORE_SCHEMA.withTags(types);
 });
 
-function parse(source, { safe, ...options } = {}) {
-  const load = safe !== false ? yaml.safeLoad : yaml.load;
-
-  return load(source, { schema: createYamlSchema(options) });
+function parse(source, options = {}) {
+  return yaml.load(source, { schema: createYamlSchema(options) });
 }
 
 export {

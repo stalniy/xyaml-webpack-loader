@@ -2,11 +2,11 @@
 /* eslint import/no-unresolved: ["error", { "ignore": ["^xyaml-webpack-loader(?:/|$)"] }] */
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import loader from 'xyaml-webpack-loader';
-import rollup from 'xyaml-webpack-loader/rollup';
+import { yaml2json as loader } from 'xyaml-webpack-loader';
+import { yaml as rollup } from 'xyaml-webpack-loader/rollup';
 import { parse, createYamlSchema, getOrCreateMdParser } from 'xyaml-webpack-loader/parser';
 import * as parserAlias from 'xyaml-webpack-loader/parser.js';
-import rollupAlias from 'xyaml-webpack-loader/rollup.js';
+import { yaml as rollupAlias } from 'xyaml-webpack-loader/rollup.js';
 
 const source = 'title: Example\ncontent: !md "**Hello**"';
 const expected = { title: 'Example', content: '<strong>Hello</strong>' };
@@ -16,10 +16,10 @@ test('public ESM entry points preserve parser behavior', () => {
   assert.equal(rollupAlias, rollup);
   assert.deepEqual(parse(source), expected);
   assert.deepEqual(parse('content: !md "# Heading"'), {
-    content: '<h1 id="Heading"><a name="Heading" class="markdown-it-headinganchor" href="#"></a>Heading</h1>'
+    content: '<h1>Heading</h1>'
   });
   assert.deepEqual(parse('content: !md "text @{.example}"'), {
-    content: '<p class="example">text</p>'
+    content: 'text @{.example}'
   });
 });
 
@@ -27,9 +27,27 @@ test('parser and schema instances are reused for the same options', () => {
   assert.equal(getOrCreateMdParser(), getOrCreateMdParser());
   const options = {};
   assert.equal(createYamlSchema(options), createYamlSchema(options));
-  const mdOptions = { use: { 'markdown-it-headinganchor': false } };
+  const mdOptions = { use: [] };
   assert.equal(getOrCreateMdParser(mdOptions), getOrCreateMdParser(mdOptions));
   assert.equal(getOrCreateMdParser(mdOptions).render('# Heading').trim(), '<h1>Heading</h1>');
+});
+
+test('Markdown scalar tags handle empty values and custom parsers', () => {
+  const options = {
+    markdown: { parser: { render: value => (value ? `<p>Custom ${value}</p>` : '') } }
+  };
+  assert.deepEqual(parse('empty: !md\nquoted: !md ""', options), { empty: '', quoted: '' });
+  assert.deepEqual(parse('content: !md "Hello"', options), { content: 'Custom Hello' });
+  assert.throws(() => parse('content: !md [Hello]', options));
+});
+
+test('parser supports disabling Markdown and the legacy safe option', () => {
+  assert.deepEqual(parse('enabled: true\ncount: 42', { markdown: false }), {
+    enabled: true, count: 42
+  });
+  assert.throws(() => parse(source, { markdown: false }), /unknown scalar tag/);
+  assert.deepEqual(parse('title: Example', { safe: true, markdown: false }), { title: 'Example' });
+  assert.deepEqual(parse('title: Example', { safe: false, markdown: false }), { title: 'Example' });
 });
 
 test('Webpack loader returns JSON and reports parse errors', () => {

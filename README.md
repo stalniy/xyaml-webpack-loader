@@ -24,6 +24,8 @@ Public entry points are `xyaml-webpack-loader` (Webpack loader),
 
 ```js
 // webpack.config.js
+import attrs from 'markdown-it-attrs';
+
 export default {
   // ...
   module: {
@@ -31,12 +33,11 @@ export default {
       type: 'json',
       test: /\.yaml$/,
       use: 'xyaml-webpack-loader',
-      options: { // default configuration
+      options: {
         markdown: {
-          use: {
-            'markdown-it-headinganchor': {}, // you can specify `false` to disable plugin
-            'markdown-it-attrs': { leftDelimiter: '@{' }
-          }
+          use: [
+            [attrs, { leftDelimiter: '@{' }]
+          ]
         }
       }
     }]
@@ -44,23 +45,26 @@ export default {
 }
 ```
 
-You can configure `markdown-it` parser to use any modules, by specifying them in `use` option.
+Configure `markdown-it` with imported plugins in the `use` array. Each entry is
+`[plugin, pluginOptions]`. No plugins are enabled by default. Install any plugins
+you configure separately. Use `[plugin, false]` to disable a plugin, or `[plugin]`
+to use the plugin's own defaults. Plugins are applied in array order.
 
 ## Configure rollup
 
 ```js
 // rollup.config.js
 import yaml from 'xyaml-webpack-loader/rollup';
+import attrs from 'markdown-it-attrs';
 
 export default {
   // ...
   plugins: [
     yaml({
-      markdown: { // default configuration, no need to provide
-        use: {
-          'markdown-it-headinganchor': {}, // you can specify `false` to disable plugin
-          'markdown-it-attrs': { leftDelimiter: '@{' }
-        }
+      markdown: {
+        use: [
+          [attrs, { leftDelimiter: '@{' }]
+        ]
       }
     })
   ]
@@ -114,28 +118,31 @@ const content = parse(fs.readFileSync('about-us.page.yml'));
 Some `markdown-it` plugins accept more than single options argument (e.g., [markdown-it-container](https://github.com/markdown-it/markdown-it-container)). In such cases, we can specify an array of options:
 
 ```js
+import container from 'markdown-it-container';
+
 const options = {
-  markdown: { // default configuration, no need to provide
-    use: {
-      'markdown-it-container': ['image', {
+  markdown: {
+    use: [
+      [container, ['image', {
         // other options here
-      }]
-    }
+      }]]
+    ]
   }
 };
 ```
 
-Or if we need to call the same plugin multiple times, we can use a function:
+For more control over the parser, we can use a function:
 
 ```js
+import container from 'markdown-it-container';
+
 const options = {
-  markdown: { // default configuration, no need to provide
-    use(parser, applyPlugins) {
-      applyPlugins(parser); // apply default plugins
-      parser.use('markdown-it-container', 'image', {
+  markdown: {
+    use(parser) {
+      parser.use(container, 'image', {
         // other options here
       });
-      parser.use('markdown-it-container', 'spoiler', {
+      parser.use(container, 'spoiler', {
         // other options here
       });
     }

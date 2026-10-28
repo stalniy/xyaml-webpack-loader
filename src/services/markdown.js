@@ -1,25 +1,10 @@
-import { createRequire } from 'node:module';
 import Markdown from 'markdown-it';
 
-// Plugins are resolved synchronously to preserve the parser's synchronous API.
-const require = createRequire(import.meta.url);
-
-const DEFAULT_PLUGINS = {
-  'markdown-it-headinganchor': {},
-  'markdown-it-attrs': { leftDelimiter: '@{' },
-};
-
-function applyPlugins(md, plugins) {
-  const allPlugins = { ...DEFAULT_PLUGINS, ...plugins };
-
-  Object.keys(allPlugins).forEach((name) => {
-    const options = allPlugins[name];
-
+function applyPlugins(md, plugins = []) {
+  plugins.forEach(([plugin, options]) => {
     if (options === false) {
       return;
     }
-
-    const plugin = require(name); // eslint-disable-line
 
     if (options === true) {
       md.use(plugin);
