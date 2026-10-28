@@ -1,6 +1,6 @@
 {
   "name": "xyaml-webpack-loader",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "type": "module",
   "main": "src/index.js",
   "exports": {
